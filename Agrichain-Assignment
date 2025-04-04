@@ -1,3 +1,6 @@
+
+#Problem 1
+
 import java.util.HashSet;
 
 public class LongestSubstringWithoutRepeating {
@@ -25,3 +28,182 @@ public class LongestSubstringWithoutRepeating {
 }
 
 // Time Complexity is O(n) where n is the length of the string. #Problem 1.
+
+
+
+#Problem 2
+
+
+Problem 2: Website Testing Plan
+
+
+
+Assumptions:
+
+• URL: https://agrichain.com
+
+• Home Page:
+
+• Input field: id="input-substring"
+
+• Submit button: id="submit-btn"
+
+• Result Page:
+
+• Result text: id="output-result"
+
+
+
+
+
+Web Automation: Test Case A1 - "abcabcbb" → Output: 3
+
+High-Level Automation Framework
+
+agrichain-automation/
+│
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   ├── config/
+│   │   │   │   └── Config.java
+│   │   │   ├── pages/
+│   │   │   │   ├── HomePage.java
+│   │   │   │   └── ResultPage.java
+│   │   │   └── utils/
+│   │   │       └── BrowserFactory.java
+│   │
+│   ├── test/
+│   │   └── java/
+│   │       └── tests/
+│   │           └── LongestSubstringTest.java
+│
+├── pom.xml
+└── testng.xml
+
+
+Code Implementation
+
+
+
+config/Config.java
+
+
+package config;
+
+public class Config {
+    public static final String BASE_URL = "https://agrichain.com";
+}
+
+
+utils/BrowserFactory.java
+
+package utils;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class BrowserFactory {
+    public static WebDriver getDriver() {
+        System.setProperty("webdriver.chrome.driver", "path/to/chromedriver"); // Update path
+        WebDriver driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        return driver;
+    }
+}
+
+pages/ResultPage.java
+
+package pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+public class ResultPage {
+    WebDriver driver;
+    By resultText = By.id("output-result");
+
+    public ResultPage(WebDriver driver) {
+        this.driver = driver;
+    }
+
+    public String getResult() {
+        return driver.findElement(resultText).getText();
+    }
+}
+
+pages/ResultPage.java
+
+package pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+
+public class ResultPage {
+    WebDriver driver;
+    By resultText = By.id("output-result");
+
+    public ResultPage(WebDriver driver) {
+        this.driver = driver;
+    }
+
+    public String getResult() {
+        return driver.findElement(resultText).getText();
+    }
+}
+
+
+
+
+tests/LongestSubstringTest.java
+
+package tests;
+
+import config.Config;
+import org.openqa.selenium.WebDriver;
+import org.testng.Assert;
+import org.testng.annotations.*;
+import pages.HomePage;
+import pages.ResultPage;
+import utils.BrowserFactory;
+
+public class LongestSubstringTest {
+    WebDriver driver;
+
+    @BeforeMethod
+    public void setup() {
+        driver = BrowserFactory.getDriver();
+        driver.get(Config.BASE_URL);
+    }
+
+    @Test
+    public void testLongestSubstring_abcabcbb() {
+        HomePage home = new HomePage(driver);
+        home.enterText("abcabcbb");
+        home.submit();
+
+        ResultPage result = new ResultPage(driver);
+        String output = result.getResult();
+
+        Assert.assertEquals(output, "3");
+    }
+
+    @AfterMethod
+    public void tearDown() {
+        driver.quit();
+    }
+}
+
+
+
+testng.xml
+
+<suite name="Agrichain Automation Suite">
+    <test name="Substring Tests">
+        <classes>
+            <class name="tests.LongestSubstringTest"/>
+        </classes>
+    </test>
+</suite>
+
+
